@@ -1,0 +1,5 @@
+jupyter-lab
+matplotlib
+notebook
+numpy
+opencv-python
