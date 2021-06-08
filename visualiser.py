@@ -100,12 +100,18 @@ def main():
     CannySliders.create()
     HoughSliders.create()
 
-    # Load in image
+    target_width = 600
+
+    # Load in images
     images = [
         cv2.imread("test_images/solidYellowLeft.jpg"),
         cv2.imread("test_images/solidYellowCurve2.jpg"),
         cv2.imread("test_images/solidWhiteRight.jpg"),
         cv2.imread("test_images/whiteCarLaneSwitch.jpg"),
+        cv2.imread("test_images/challenge/excess-shadow.png"),
+        cv2.imread("test_images/challenge/high-brightness.png"),
+        cv2.imread("test_images/challenge/yellow-curve.png"),
+        cv2.imread("test_images/challenge/yellow-shadow.png"),
     ]
 
     while True:
@@ -150,7 +156,9 @@ def main():
             )
 
             # create a smaller image from the output
-            _img = cv2.resize(_img, (0, 0), fx=0.75, fy=0.75)
+            img_width = _img.shape[1]
+            multiplier = target_width / img_width
+            _img = cv2.resize(_img, (0, 0), fx=multiplier, fy=multiplier)
             # convert to cv2 compatible color space
             _img = cv2.cvtColor(_img, cv2.COLOR_RGB2BGR)
             # and render the image
