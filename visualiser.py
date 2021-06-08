@@ -1,16 +1,7 @@
 import cv2
 import numpy as np
-from functools import partial
+
 import pipeline as p
-
-
-# Load in image
-images = [
-    cv2.imread("test_images/solidYellowLeft.jpg"),
-    cv2.imread("test_images/solidYellowCurve2.jpg"),
-    cv2.imread("test_images/solidWhiteRight.jpg"),
-    cv2.imread("test_images/whiteCarLaneSwitch.jpg"),
-]
 
 
 def noop(*args, **kwargs):
@@ -30,13 +21,13 @@ class HsvSlider:
         # Set default value for MAX HSV trackbars.
         cv2.setTrackbarPos("Hue[H]", "controls", 0)
         cv2.setTrackbarPos("Sat[L]", "controls", 0)
-        cv2.setTrackbarPos("Val[L]", "controls", 210)
+        cv2.setTrackbarPos("Val[L]", "controls", 0)
         cv2.setTrackbarPos("Hue[U]", "controls", 179)
         cv2.setTrackbarPos("Sat[U]", "controls", 255)
         cv2.setTrackbarPos("Val[U]", "controls", 255)
 
     @staticmethod
-    def get():
+    def get_values():
         # get current positions of all trackbars
         h_min = cv2.getTrackbarPos("Hue[L]", "controls")
         s_min = cv2.getTrackbarPos("Sat[L]", "controls")
@@ -57,7 +48,7 @@ class CannySliders:
         cv2.setTrackbarPos("Canny[U]", "controls", 150)
 
     @staticmethod
-    def get():
+    def get_values():
         return (
             cv2.getTrackbarPos("Canny[L]", "controls"),
             cv2.getTrackbarPos("Canny[U]", "controls"),
@@ -78,7 +69,7 @@ class HoughSliders:
         cv2.setTrackbarPos("HMaxGap", "controls", 10)
 
     @staticmethod
-    def get():
+    def get_values():
         return (
             cv2.getTrackbarPos("HRho", "controls"),
             cv2.getTrackbarPos("HThresh", "controls"),
@@ -95,7 +86,7 @@ class OtherSliders:
         cv2.setTrackbarPos("Blur", "controls", 7)
 
     @staticmethod
-    def get():
+    def get_values():
         return cv2.getTrackbarPos("Blur", "controls")
 
 
@@ -109,19 +100,26 @@ def main():
     CannySliders.create()
     HoughSliders.create()
 
+    # Load in image
+    images = [
+        cv2.imread("test_images/solidYellowLeft.jpg"),
+        cv2.imread("test_images/solidYellowCurve2.jpg"),
+        cv2.imread("test_images/solidWhiteRight.jpg"),
+        cv2.imread("test_images/whiteCarLaneSwitch.jpg"),
+    ]
+
     while True:
         # Get slider values
-        lower, upper = HsvSlider.get()
-        canny_low, canny_high = CannySliders.get()
-        rho, threshold, min_len, max_gap = HoughSliders.get()
-        blur = OtherSliders.get()
+        lower, upper = HsvSlider.get_values()
+        canny_low, canny_high = CannySliders.get_values()
+        rho, threshold, min_len, max_gap = HoughSliders.get_values()
+        blur = OtherSliders.get_values()
 
-        # Correct slider values
+        # Auto-adjust slider values
         blur = max((blur - 1) if blur % 2 == 0 else blur, 1)
 
         # run lane detection pipeline for all images
-        output_images = []
-        for image in images:
+        for idx, image in enumerate(images, start=1):
             _img = np.copy(image)
             _img = cv2.cvtColor(_img, cv2.COLOR_BGR2RGB)
 
@@ -144,19 +142,19 @@ def main():
                     "max_line_gap": max_gap,
                 },
                 lane={
+                    "lane_thickness": 2,
                     "draw_hough_points": True,
                     "draw_hough_lines": True,
                 },
                 output_intermediate=True,
             )
 
+            # create a smaller image from the output
             _img = cv2.resize(_img, (0, 0), fx=0.75, fy=0.75)
-            output_images.append(_img)
-
-        # Display output image
-        for idx, output in enumerate(output_images, start=1):
-            output = cv2.cvtColor(output, cv2.COLOR_RGB2BGR)
-            cv2.imshow(f"rendered{idx}", output)
+            # convert to cv2 compatible color space
+            _img = cv2.cvtColor(_img, cv2.COLOR_RGB2BGR)
+            # and render the image
+            cv2.imshow(f"rendered{idx}", _img)
 
         # Wait longer to prevent freeze for videos.
         if cv2.waitKey(33) & 0xFF == ord("q"):

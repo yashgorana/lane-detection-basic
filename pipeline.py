@@ -121,6 +121,7 @@ def draw_lanes(
     lane_thickness=10,
     hough_color=(0, 255, 0),
     hough_thickness=1,
+    draw_lanes=True,
     draw_hough_points=False,
     draw_hough_lines=False,
     **kwargs
@@ -213,8 +214,9 @@ def draw_lanes(
     right_p2 = np.array([right_line(max_y), max_y], dtype=np.uint)
 
     # Draw the averaged lane lines
-    cv2.line(img, left_p1, left_p2, color=lane_color, thickness=lane_thickness)
-    cv2.line(img, right_p1, right_p2, color=lane_color, thickness=lane_thickness)
+    if draw_lanes:
+        cv2.line(img, left_p1, left_p2, color=lane_color, thickness=lane_thickness)
+        cv2.line(img, right_p1, right_p2, color=lane_color, thickness=lane_thickness)
 
     # DEBUG: vertical mid line
     # cv2.line(img, (int(max_x/2), 0), (int(max_x/2), max_y), (0, 255, 0), thickness=1)
