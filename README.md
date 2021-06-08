@@ -2,12 +2,12 @@
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-<img src="test_images_output/solidYellowCurve2.jpg" width="480" alt="Combined Image" />
+<img src="test_images_output/solidYellowCurve2.jpg" width="640" alt="Combined Image" />
 
 Overview
 ---
 
-This project is the submission for Project#1 "Finding Lane Lines" of the  Udacity's Self Driving Nano-Degree course. Source repo - https://github.com/udacity/CarND-LaneLines-P1
+This project is the submission for Project#1 "Finding Lane Lines" of the Udacity's Self Driving Nano-Degree course. Source repo - https://github.com/udacity/CarND-LaneLines-P1
 
 When we drive, we use our eyes to decide where to go. The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle. Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
 
@@ -44,8 +44,9 @@ To open the `P1.ipynb` Jupyter Notebook, simply run the following and open the n
 
 ### Visualiser tool
 
-This tool will help visualise the changes made in the hyper-parameters of the Image Processing pipeline.
-The tool DOES NOT write to any file.
+<img src="examples/tool.png" width="640" alt="Visualiser Tool" />
+
+This tool will help visualise the changes made in the hyper-parameters of the Image Processing pipeline. The tool DOES NOT write to any file.
 
 To run the visualiser tool, run the following
 
