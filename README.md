@@ -44,11 +44,11 @@ To open the `P1.ipynb` Jupyter Notebook, simply run the following and open the n
 
 ### Visualiser tool
 
-<video><source src="https://giant.gfycat.com/WastefulDemandingGemsbuck.mp4"></source></video>
+![](./assets/tool.gif)
 
 This tool will help visualise the changes made in the hyper-parameters of the Image Processing pipeline. The tool DOES NOT write to any file.
 
-To run the visualiser tool, run the following
+To run the visualiser tool, execute the following
 
     $ python visualiser.py
 
