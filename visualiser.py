@@ -82,12 +82,14 @@ class OtherSliders:
     @staticmethod
     def create():
         cv2.createTrackbar("Blur", "controls", 1, 15, noop)
+        cv2.createTrackbar("LaneW", "controls", 1, 15, noop)
 
         cv2.setTrackbarPos("Blur", "controls", 7)
+        cv2.setTrackbarPos("LaneW", "controls", 2)
 
     @staticmethod
     def get_values():
-        return cv2.getTrackbarPos("Blur", "controls")
+        return (cv2.getTrackbarPos("Blur", "controls"), cv2.getTrackbarPos("LaneW", "controls"))
 
 
 def main():
@@ -96,15 +98,14 @@ def main():
 
     # Add UI components
     HsvSlider.create()
-    OtherSliders.create()
     CannySliders.create()
     HoughSliders.create()
+    OtherSliders.create()
 
     target_width = 600
 
     # Load in images
     images = [
-        cv2.imread("test_images/solidYellowLeft.jpg"),
         cv2.imread("test_images/solidYellowCurve2.jpg"),
         cv2.imread("test_images/solidWhiteRight.jpg"),
         cv2.imread("test_images/whiteCarLaneSwitch.jpg"),
@@ -119,13 +120,18 @@ def main():
         lower, upper = HsvSlider.get_values()
         canny_low, canny_high = CannySliders.get_values()
         rho, threshold, min_len, max_gap = HoughSliders.get_values()
-        blur = OtherSliders.get_values()
+        (blur, lane_width) = OtherSliders.get_values()
 
         # Auto-adjust slider values
         blur = max((blur - 1) if blur % 2 == 0 else blur, 1)
+        lane_width = max(lane_width, 1)
 
         # run lane detection pipeline for all images
         for idx, image in enumerate(images, start=1):
+
+            if image is None:
+                continue
+
             _img = np.copy(image)
             _img = cv2.cvtColor(_img, cv2.COLOR_BGR2RGB)
 
@@ -148,7 +154,8 @@ def main():
                     "max_line_gap": max_gap,
                 },
                 lane={
-                    "lane_thickness": 2,
+                    "lane_thickness": lane_width,
+                    "draw_deadzone": True,
                     "draw_hough_points": True,
                     "draw_hough_lines": True,
                 },

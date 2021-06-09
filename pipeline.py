@@ -121,12 +121,14 @@ def draw_lanes(
     lane_thickness=10,
     hough_color=(0, 255, 0),
     hough_thickness=1,
+    deadzone=15,
     draw_lanes=True,
     draw_hough_points=False,
     draw_hough_lines=False,
+    draw_deadzone=False,
     **kwargs
 ):
-    """Draw averaged, filtered & extrapolated lane lines from hough line
+    """Draw averaged, filtered & extrapolated lane lines from Hough line.
 
     Arguments:
         img: Source image
@@ -157,7 +159,14 @@ def draw_lanes(
 
             # Use "left_coords" list if co-ord lies in the left half of the image
             # else use "right_coords" list
-            coords = left_coords if (x1, x2) < (max_x / 2, max_x / 2) else right_coords
+            left_deadzone = int(max_x / 2) - deadzone
+            right_deadzone = int(max_x / 2) + deadzone
+            if (x1, x2) < (left_deadzone, left_deadzone):
+                coords = left_coords
+            elif (x1, x2) > (right_deadzone, right_deadzone):
+                coords = right_coords
+            else:
+                continue
 
             # Append both co-ords to the selected lane list
             coords.append((x1, y1))
@@ -165,31 +174,13 @@ def draw_lanes(
 
             # Draw hough lines if required
             if draw_hough_lines:
-                cv2.line(
-                    img,
-                    (x1, y1),
-                    (x2, y2),
-                    color=hough_color,
-                    thickness=hough_thickness,
-                )
+                cv2.line(img, (x1, y1), (x2, y2), color=hough_color, thickness=hough_thickness)
 
             # Draw hough points if required
             if draw_hough_points:
                 radius = hough_thickness * 2
-                cv2.circle(
-                    img,
-                    (x1, y1),
-                    radius=radius,
-                    color=hough_color,
-                    thickness=radius,
-                )
-                cv2.circle(
-                    img,
-                    (x2, y2),
-                    radius=radius,
-                    color=hough_color,
-                    thickness=radius,
-                )
+                cv2.circle(img, (x1, y1), radius=radius, color=hough_color, thickness=radius)
+                cv2.circle(img, (x2, y2), radius=radius, color=hough_color, thickness=radius)
 
     # Return if either of co-ord list is empty
     if len(left_coords) == 0 or len(right_coords) == 0:
@@ -219,7 +210,10 @@ def draw_lanes(
         cv2.line(img, right_p1, right_p2, color=lane_color, thickness=lane_thickness)
 
     # DEBUG: vertical mid line
-    # cv2.line(img, (int(max_x/2), 0), (int(max_x/2), max_y), (0, 255, 0), thickness=1)
+    if draw_deadzone:
+        cv2.line(img, (int(max_x / 2), 0), (int(max_x / 2), max_y), (0, 255, 0), thickness=1)
+        cv2.line(img, (left_deadzone, 0), (left_deadzone, max_y), (0, 255, 255), thickness=1)
+        cv2.line(img, (right_deadzone, 0), (right_deadzone, max_y), (0, 255, 255), thickness=1)
 
 
 def lane_mask_quad(img, top_width=100, offset_top=0.5):
