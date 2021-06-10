@@ -2,7 +2,7 @@
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-<img src="test_images_output/solidYellowCurve2.jpg" width="640" alt="Combined Image" />
+<img src="test_images_output/solidYellowCurve2.jpg" alt="Combined Image" />
 
 Overview
 ---
@@ -13,8 +13,7 @@ When we drive, we use our eyes to decide where to go. The lines on the road that
 
 This project detects lane lines in images & videos using Python and OpenCV.
 
-**The writeup about the implementation is [available here](./writeup.md.)**
-
+**The writeup about the implementation is [available here](./WRITEUP.md.)**
 
 ## Getting Started
 
@@ -57,4 +56,4 @@ Press `Q` to quit the tool.
 
 ## License
 
-[MIT (Udacity)](./LICENSE)
+[MIT](./LICENSE)
