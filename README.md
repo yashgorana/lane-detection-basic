@@ -13,7 +13,7 @@ When we drive, we use our eyes to decide where to go. The lines on the road that
 
 This project detects lane lines in images & videos using Python and OpenCV.
 
-**The writeup about the implementation is [available here](./WRITEUP.md.)**
+**The writeup about the implementation is [available here](./WRITEUP.md)**
 
 ## Getting Started
 
