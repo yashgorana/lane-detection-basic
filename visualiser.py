@@ -19,21 +19,21 @@ class HsvSlider:
         cv2.createTrackbar("Val[U]", "controls", 0, 255, noop)
 
         # Set default value for MAX HSV trackbars.
-        cv2.setTrackbarPos("Hue[H]", "controls", 0)
-        cv2.setTrackbarPos("Sat[L]", "controls", 0)
-        cv2.setTrackbarPos("Val[L]", "controls", 0)
+        cv2.setTrackbarPos("Hue[L]", "controls", 0)
         cv2.setTrackbarPos("Hue[U]", "controls", 179)
+        cv2.setTrackbarPos("Sat[L]", "controls", 0)
         cv2.setTrackbarPos("Sat[U]", "controls", 255)
+        cv2.setTrackbarPos("Val[L]", "controls", 0)
         cv2.setTrackbarPos("Val[U]", "controls", 255)
 
     @staticmethod
     def get_values():
         # get current positions of all trackbars
         h_min = cv2.getTrackbarPos("Hue[L]", "controls")
-        s_min = cv2.getTrackbarPos("Sat[L]", "controls")
-        v_min = cv2.getTrackbarPos("Val[L]", "controls")
         h_max = cv2.getTrackbarPos("Hue[U]", "controls")
+        s_min = cv2.getTrackbarPos("Sat[L]", "controls")
         s_max = cv2.getTrackbarPos("Sat[U]", "controls")
+        v_min = cv2.getTrackbarPos("Val[L]", "controls")
         v_max = cv2.getTrackbarPos("Val[U]", "controls")
         return np.array([h_min, s_min, v_min]), np.array([h_max, s_max, v_max])
 
